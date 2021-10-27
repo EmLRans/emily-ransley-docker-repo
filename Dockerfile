@@ -2,9 +2,9 @@ FROM quay.io/upslopeio/node-alpine
 #Define directory
 WORKDIR /usr/src/app
 #Copy packages into docker
-COPY package*.json .
+COPY package*.json ./
 #Download NPM matching to to the one in json file
-RUN npm ci
+RUN npm install
 #Copy all
 COPY . .
 EXPOSE 3000
