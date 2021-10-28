@@ -5,6 +5,8 @@ metadata:
 spec:
   serviceAccountName: build-bot
   params:
+  - name: app-name
+    value: buildah-run
   - name: source-repo
     value: https://github.com/EmLRans/emily-ransley-docker-repo
   - name: image-repo

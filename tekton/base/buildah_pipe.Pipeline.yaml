@@ -4,6 +4,8 @@ metadata:
   name: buildah
 spec:
   params:
+  - name: app-name
+    type: string
   - name: source-repo
     type: string
     description: Source code repository
@@ -42,6 +44,36 @@ spec:
     taskRef:
       name: buildah
       kind: ClusterTask
+    workspaces:
+    - name: source
+      workspace: pipeline-shared-data
+  - name: create-configuration
+    params:
+    - name: app-name
+      value: "$(params.app-name)"
+    - name: source-repo
+      value: "$(params.source-repo)"
+    - name: commit
+      value: "$(tasks.clone-repository.results.commit)"
+    - name: image-repo
+      value: "$(params.image-repo)"
+    runAfter:
+    - create-image
+    taskRef: 
+      name: create-configuration
+    workspaces:
+    - name: source
+      workspace: pipeline-shared-data
+  - name: deploy
+    params:
+    - name: manifest
+      value: "$(tasks.create-configuration.results.manifest)"
+    - name: app-namespace
+      value: "$(context.pipelineRun.namespace)"
+    runAfter:
+    - create-configuration
+    taskRef:
+      name: deploy
     workspaces:
     - name: source
       workspace: pipeline-shared-data
